@@ -12,14 +12,12 @@ SCRIPT_TAB.Screen.Synchronous = True
 commands = [
 "show run",
 "show cdp nei",
-"show lldp nei",
 "show int status",
-"show int status",
+"show int counters",
 "show power in",
 "show etherch su",
 "show ver | inc upt"] 
 
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 def main():
 
 	if not crt.Session.Connected:
@@ -34,10 +32,9 @@ def main():
 	if not SendExpect("term len 0", "#"):
 		return
 
-	hostname = CaptureOutputOfCommand("show run | inc hostname","#")[10:]
+	hostname = CaptureOutputOfCommand("/r","#")
 	data = hostname
-	#data = hostname[:len(hostname)//2]
-
+	
 	for command in commands:
 		output = CaptureOutputOfCommand(command, "#")
 		data += ('\r') + command + ('\r') + output
@@ -51,7 +48,6 @@ def main():
 	crt.Dialog.MessageBox(
 		"Success! Text is now in the clipboard")
 	
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 def SendExpect(send, expect):
 
 	if not SCRIPT_TAB.Session.Connected:
@@ -62,8 +58,6 @@ def SendExpect(send, expect):
 
 	return True
 
-
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 def CaptureOutputOfCommand(command, prompt):
 	if not crt.Session.Connected:
 		return "[ERROR: Not Connected.]"
